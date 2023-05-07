@@ -1,0 +1,12 @@
+POST localhost:8080/api/auth
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "123456",
+  "captcha": "1mntc"
+}
+
+###
+GET localhost:8080/api/captcha

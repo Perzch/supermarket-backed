@@ -1,0 +1,22 @@
+spring:
+  # jpa configuration
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        #        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/supermarket?useSSL=false&serverTimezone=UTC
+    username: root
+    password: perzch
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss.SSS
+server:
+  servlet:
+    context-path: /api
+
+jwt:
+  key: "supermarket_jwt_key_melody"
