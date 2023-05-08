@@ -1,26 +1,27 @@
 package com.melody.supermarket.pojo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table
+@JsonIgnoreProperties(value = {"sales", "category"})
 public class Product{
     @Id
     private Long id;
-    @Column
-    private Long cid;
     @Column
     private String name;
     /**
@@ -35,7 +36,7 @@ public class Product{
     @Column
     private String manufacturers;
     @Column
-    private Double price;
+    private BigDecimal price;
     /**
      * 进货日期
      */
@@ -48,10 +49,15 @@ public class Product{
      * 售价
      */
     @Column
-    private Double nowPrice;
+    private BigDecimal nowPrice;
     @Column
     private Integer saleCount;
-    @Column
-    private String category;
+    @Column(name = "category_name")
+    private String categoryName;
+    @ManyToOne(targetEntity = Category.class, cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
+    @JoinColumn(name = "cid")
+    private Category category;
+    @ManyToMany(mappedBy = "products")
+    private List<Sale> sales;
 }
 

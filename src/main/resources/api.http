@@ -10,3 +10,15 @@ Content-Type: application/json
 
 ###
 GET localhost:8080/api/captcha
+
+###
+GET localhost:8080/api/category
+
+###
+PUT localhost:8080/api/category
+Content-Type: application/json
+
+{
+  "name": "测试",
+  "recommend": "22"
+}

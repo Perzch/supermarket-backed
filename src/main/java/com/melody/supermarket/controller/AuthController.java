@@ -9,10 +9,12 @@ import com.melody.supermarket.pojo.User;
 import com.melody.supermarket.repository.UserRepository;
 import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
+import com.melody.supermarket.services.UserServices;
 import com.melody.supermarket.util.JwtUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -27,6 +29,9 @@ import java.util.Optional;
 public class AuthController {
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private UserServices userServices;
 
 //    验证码对象
     private LineCaptcha lineCaptcha;
@@ -43,7 +48,7 @@ public class AuthController {
 //        验证验证码
         if(!lineCaptcha.verify(u.getCaptcha()))
             return ResponseEntity.ok(new ResponseBody<>(Code.CAPTCHA_ERROR));
-        User user = userRepository.findUserByUsername(u.getUsername());
+        User user = userServices.findByUsername(u);
         if(Objects.isNull(user)) {
             return ResponseEntity.ok(new ResponseBody<>(Code.USER_NOT_FOUND));
         } else

@@ -1,29 +1,36 @@
 package com.melody.supermarket.pojo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.ReadOnlyProperty;
+
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table
+@DynamicUpdate
+@JsonIgnoreProperties("products")
 public class Category{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(name = "name", unique = true)
     private String name;
     /**
      * 推荐指数
      */
-    @Column
+    @Column(name = "recommend", nullable = false)
     private String recommend;
-    @Column
-    private Integer products;
+    /**
+     * 该分类下的商品
+     */
+    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL})
+    private List<Product> products;
 }
 

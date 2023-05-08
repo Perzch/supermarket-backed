@@ -1,6 +1,6 @@
 package com.melody.supermarket;
 
-import com.melody.supermarket.interceptor.ResponseInterceptor;
+import com.melody.supermarket.interceptor.JwtInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,6 +15,6 @@ public class ShopApplication implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ResponseInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/category/**","/product/**","/sale/**");
     }
 }

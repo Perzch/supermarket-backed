@@ -9,9 +9,7 @@ public class ResponseBody<T> {
     private T data;
 
     public ResponseBody() {
-        this.code = Code.SERVER.getCode();
-        this.message = Code.SERVER.name();
-        this.data = null;
+        this(Code.SERVER);
     }
 
     public ResponseBody(Code code) {
@@ -20,7 +18,7 @@ public class ResponseBody<T> {
 
     public ResponseBody(Code code, T data) {
         this.code = code.getCode();
-        this.message = code.name();
+        this.message = code.getMsg();
         this.data = data;
     }
     public ResponseBody(Integer code, String message, T data) {
