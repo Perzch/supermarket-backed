@@ -6,11 +6,10 @@ import com.melody.supermarket.pojo.Product;
 import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
 import com.melody.supermarket.services.ProductServices;
-import io.micrometer.common.util.StringUtils;
+import com.melody.supermarket.util.PageRequestUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +28,7 @@ public class ProductController {
                                                        @RequestParam(required = false) String[] sortColumn,
                                                        @RequestParam(required = false) String sort,
                                                        @RequestBody(required = false) ProductDto productDto) {
-        if(Objects.isNull(page)) page =0;
-        if(Objects.isNull(limit)) limit = 10;
-        PageRequest pageRequest;
-        if(StringUtils.isBlank(sort)&&Objects.isNull(sortColumn)) {//没有传排序列与排序方向
-            pageRequest = PageRequest.of(page, limit);
-        } else if(StringUtils.isBlank(sort)&&Objects.nonNull(sortColumn)) { //没有传排序方向,但是传了排序列,默认排序方向为asc
-            pageRequest = PageRequest.of(page, limit,Sort.by(Sort.Direction.ASC, sortColumn));
-        } else if(StringUtils.isNotBlank(sort)&&Objects.isNull(sortColumn)) { //没有传排序列,但是传了排序方向,默认排序列为id
-            pageRequest = PageRequest.of(page, limit,Sort.by(Sort.Direction.fromString(sort), "id"));
-        } else { //传了排序列与排序方向
-            pageRequest = PageRequest.of(page, limit,Sort.by(Sort.Direction.fromString(sort), sortColumn));
-        }
+        PageRequest pageRequest = PageRequestUtil.getPageRequest(page, limit, sortColumn, sort);
 //        如果传了条件
         if(Objects.isNull(productDto)) return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(pageRequest)));
         else return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(productDto, pageRequest)));

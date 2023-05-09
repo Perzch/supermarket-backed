@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table
-@JsonIgnoreProperties(value = {"sales", "category"})
+@JsonIgnoreProperties(value = {"sales","category"})
 @NotNull(message = "商品信息不能为空")
 public class Product{
     @Id
@@ -70,7 +70,7 @@ public class Product{
     @ManyToOne(targetEntity = Category.class, cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
     @JoinColumn(name = "cid")
     private Category category;
-    @ManyToMany(mappedBy = "products")
+    @OneToMany(mappedBy = "product")
     private List<Sale> sales;
 }
 
