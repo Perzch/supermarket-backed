@@ -31,13 +31,14 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<ResponseBody<String>> login(@RequestBody @Valid User u) {
-//        验证验证码
         try{
+//            验证码错误，抛出验证码错误异常
             lineCaptcha.verify(u.getCaptcha());
         } catch (Exception e) {
             throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
         }
         User user = userServices.findByUsername(u);
+//        如果没有找到用户，抛出用户不存在异常
         if(Objects.isNull(user)) throw new ExistException(Code.USER_NOT_EXIST.getMsg());
         else
             return user.getPassword().equals(u.getPassword()) ?

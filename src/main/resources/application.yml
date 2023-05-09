@@ -15,7 +15,8 @@ spring:
     username: root
     password: perzch
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss.SSS
+    date-format: yyyy-MM-dd
+    time-zone: GMT+8
 server:
   servlet:
     context-path: /api

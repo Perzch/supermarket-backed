@@ -5,46 +5,74 @@ import com.melody.supermarket.pojo.Product;
 import com.melody.supermarket.repository.ProductRepository;
 import com.melody.supermarket.services.ProductServices;
 import com.melody.supermarket.specification.ProductSpecification;
+import com.melody.supermarket.util.BeanUtil;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.util.StringUtils;
+import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
+@Service("productServices")
 public class ProductServicesImpl implements ProductServices {
     @Resource
     private ProductRepository productRepository;
+
+    /***
+     * 根据条件查询商品后进行分页并排序
+     * @param productDto 查询条件
+     * @param pageable 分页与排序对象
+     * @return 分页后的商品数据
+     */
     @Override
-    public Page<Product> getAll(ProductDto productDto, Pageable pageable) {
-//        使用Specification进行一段时间的查询
-        ProductSpecification productSpecification;
-        return productRepository.findAll(ProductSpecification.categoryNameLike(productDto.getCategoryName())
-                .and(ProductSpecification.nameLike(productDto.getName()))
-                .and(ProductSpecification.yieldDateBetween(
-                        productDto.getStartYieldDate(),
-                        productDto.getEndYieldDate())
-                ),pageable);
+    public Page<Product> findAll(ProductDto productDto, Pageable pageable) {
+        List<Specification<Product>> specifications = new ArrayList<>();
+        if(StringUtils.isNotBlank(productDto.getName())) {
+            specifications.add(ProductSpecification.nameLike(productDto.getName()));
+        }
+        if(StringUtils.isNotBlank(productDto.getCategoryName()))
+            specifications.add(ProductSpecification.categoryNameLike(productDto.getCategoryName()));
+        if(Objects.nonNull(productDto.getStartYieldDate())&&Objects.nonNull(productDto.getEndYieldDate())) {
+            specifications.add(ProductSpecification.yieldDateBetween(productDto.getStartYieldDate(), productDto.getEndYieldDate()));
+        }
+//        将list里面的Specification条件组合
+        Specification<Product> specification = specifications.stream().reduce(Specification::and).orElse(null);
+        return productRepository.findAll(specification,pageable);
+    }
+
+    /***
+     * 分页查询并排序
+     * @param pageable 分页与排序对象
+     * @return 分页后的商品数据
+     */
+    @Override
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
     public Product insert(Product p) {
-        return null;
+        return productRepository.save(p);
     }
 
     @Override
     public Product update(Product p) {
-        return null;
+        Optional<Product> optional = productRepository.findById(p.getId());
+        if(optional.isPresent()) {
+            Product product = optional.get();
+            p.setCategoryName(product.getCategoryName());
+            BeanUtil.copyNonNullProperties(p,product);
+            return productRepository.save(product);
+        } else throw new RuntimeException("该商品不存在");
     }
 
     @Override
     public void delete(Long id) {
-
+        productRepository.deleteById(id);
     }
 }

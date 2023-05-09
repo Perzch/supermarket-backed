@@ -43,14 +43,14 @@ CREATE TABLE IF NOT EXISTS `sale` (
 
 # create trigger
 DELIMITER $
--- category表插入数据时,products默认为0
-# DROP TRIGGER IF EXISTS insert_before_category$
-# CREATE TRIGGER insert_before_category BEFORE INSERT
-#     ON category FOR EACH ROW
+-- product表更新数据前,category_name禁止更新(会导致修改cid时category_name不同步)
+# DROP TRIGGER IF EXISTS update_before_product$
+# CREATE TRIGGER update_before_product BEFORE UPDATE
+#     ON product FOR EACH ROW
 # BEGIN
-#     set new.products = 0;
+#     set new.category_name = old.category_name;
 # end $
--- product表插入数据时,自动填入category_name
+-- product表插入数据前,自动填入category_name
 DROP TRIGGER IF EXISTS insert_before_product$
 CREATE TRIGGER insert_before_product BEFORE INSERT
     ON product FOR EACH ROW
@@ -59,7 +59,7 @@ BEGIN
     set cID = (SELECT id FROM category WHERE name = new.category_name);
     set new.cid = cID;
 END$
--- sale表插入数据时,product的库存相应减少
+-- sale表插入数据后,product的库存相应减少
 DROP TRIGGER IF EXISTS insert_after_sale$
 CREATE TRIGGER insert_after_sale AFTER INSERT
     ON sale FOR EACH ROW
@@ -67,7 +67,7 @@ BEGIN
     UPDATE product set stock = stock - new.sale_count WHERE id = new.pid;
     UPDATE product set sale_count = sale_count + new.sale_count WHERE id = new.pid;
 END$
--- category表更改时,product的分类名称也修改
+-- category表更改后,product的分类名称也修改
 DELIMITER $
 DROP TRIGGER IF EXISTS update_after_category$
 CREATE TRIGGER update_after_category AFTER UPDATE
