@@ -17,6 +17,7 @@ public enum Code {
     ID_EMPTY(400,"id为空!"),
     WARNING(400,"操作失败!"),
     EMPTY(400,"没有数据需要操作!"),
+    USER_NOT_EXIST(400,"用户不存在!"),
     INVALID(400,"无效签名!"),
     EXPIRED(400,"token过期!"),
     NULLITY(400,"非法访问!"),
