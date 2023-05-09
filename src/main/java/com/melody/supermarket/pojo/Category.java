@@ -2,12 +2,9 @@ package com.melody.supermarket.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.data.annotation.ReadOnlyProperty;
 
 import java.util.List;
 
@@ -19,6 +16,7 @@ import java.util.List;
 public class Category{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull(message = "id不能为空")
     private Long id;
     @Column(name = "name", unique = true)
     private String name;
