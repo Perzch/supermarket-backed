@@ -6,6 +6,9 @@ import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
 import com.melody.supermarket.services.CategoryServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +61,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseBody<String>> delete(@PathVariable Long id){
-        if(id == 0) return ResponseEntity.ok(new ResponseBody<>(Code.PARAMETER));
+        if(Objects.isNull(id)) return ResponseEntity.ok(new ResponseBody<>(Code.PARAMETER));
         categoryRepository.deleteById(id);
         return ResponseEntity.ok(new ResponseBody<>(Code.DELETED));
     }

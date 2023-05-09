@@ -13,7 +13,6 @@ public class CategoryServicesImpl implements CategoryServices {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     @Override
     public Category insert(Category c) {
         return categoryRepository.save(c);
