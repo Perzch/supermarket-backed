@@ -59,4 +59,9 @@ public class CategoryController {
         if(StringUtils.isBlank(sortColumn)) return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryRepository.findAll()));
         else return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryRepository.findAll(Sort.by(Sort.Direction.fromString(sort),sortColumn))));
     }
+
+    @GetMapping("/names")
+    public ResponseEntity<ResponseBody<?>> queryCategoryNames() {
+        return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryServices.findAllNames()));
+    }
 }

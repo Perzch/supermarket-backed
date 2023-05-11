@@ -58,6 +58,11 @@ public class CategoryServicesImpl implements CategoryServices {
     }
 
     @Override
+    public List<String> findAllNames() {
+        return categoryRepository.findAllNames();
+    }
+
+    @Override
     public Category findByName(String name) {
         return categoryRepository.findByName(name);
     }

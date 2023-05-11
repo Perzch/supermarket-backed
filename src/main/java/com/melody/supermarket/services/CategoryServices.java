@@ -15,6 +15,7 @@ public interface CategoryServices {
     List<Category> findAll();
 
     List<Category> findAll(Sort sort);
+    List<String> findAllNames();
 
     Category findByName(String name);
 }

@@ -1,6 +1,7 @@
 package com.melody.supermarket.services.impl;
 
 import com.melody.supermarket.dto.ProductDto;
+import com.melody.supermarket.exception.ParameterException;
 import com.melody.supermarket.pojo.Product;
 import com.melody.supermarket.repository.ProductRepository;
 import com.melody.supermarket.services.ProductServices;
@@ -53,6 +54,28 @@ public class ProductServicesImpl implements ProductServices {
     @Override
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<Long> findAllIds() {
+        return  productRepository.findAllIds();
+    }
+
+    @Override
+    public List<String> findAllNames() {
+        return productRepository.findAllNames();
+    }
+
+    @Override
+    public Product findById(Long id) {
+        Optional<Product> optional = productRepository.findById(id);
+        if(optional.isPresent()) return optional.get();
+        else throw new ParameterException("该商品不存在");
+    }
+
+    @Override
+    public Product findByName(String name) {
+        return productRepository.findByName(name);
     }
 
     @Override

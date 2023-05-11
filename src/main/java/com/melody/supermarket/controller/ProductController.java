@@ -40,6 +40,24 @@ public class ProductController {
         return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(productDto, pageRequest)));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ResponseBody<?>> findByName(@PathVariable String name) {
+        return ResponseEntity.ok(new ResponseBody<>(productServices.findByName(name)));
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseBody<?>> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(new ResponseBody<>(productServices.findById(id)));
+    }
+    @GetMapping("/ids")
+    public ResponseEntity<ResponseBody<?>> findProductIds() {
+        return ResponseEntity.ok(new ResponseBody<>(productServices.findAllIds()));
+    }
+
+    @GetMapping("/names")
+    public ResponseEntity<ResponseBody<?>> findProductNames() {
+        return ResponseEntity.ok(new ResponseBody<>(productServices.findAllNames()));
+    }
+
     @PostMapping
     public ResponseEntity<ResponseBody<?>> insertProduct(@RequestBody @Valid Product product) {
         if(Objects.nonNull(product.getId())) throw new ParameterException("新增时不能传id");

@@ -7,15 +7,20 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 public class JwtInterceptor implements HandlerInterceptor {
-    private static final String METHODS = "Access-Control-Allow-Methods";
-    private static final String MAX_AGE = "Access-Control-Max-Age";
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String authorization = request.getHeader("authorization");
+        if(!StringUtils.hasText(authorization)) {
+            throw new RuntimeException("未登录");
+        }
         String token = authorization.replaceAll("Bearer ", "");
         if(!StringUtils.hasText(token)) {
-            return false;
+            throw new RuntimeException("未登录");
         }
-        return JwtUtil.verifyToken(token);
+        try{
+            return JwtUtil.verifyToken(token);
+        } catch (Exception e) {
+            throw new RuntimeException("token无效");
+        }
     }
 }

@@ -67,6 +67,19 @@ public class SaleServicesImpl implements SaleServices {
     }
 
     @Override
+    public List<Sale> findAll() {
+        return saleRepository.findAll();
+    }
+
+    @Override
+    public Sale findById(Long id) {
+        Optional<Sale> optional = saleRepository.findById(id);
+        if(optional.isPresent()) {
+            return optional.get();
+        } else throw new RuntimeException("销售记录不存在");
+    }
+
+    @Override
     public Sale insert(SaleDto saleDto) {
 //        传入pid后根据pid查询商品,如果为空则抛出异常,否则获取传入的saleCount和查询到的商品,创建Sale对象并保存
         Optional<Product> optionalProduct = productRepository.findById(saleDto.getPid());

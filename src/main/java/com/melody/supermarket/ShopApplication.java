@@ -15,6 +15,6 @@ public class ShopApplication implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/category/**","/product/**","/sale/**");
+        registry.addInterceptor(new JwtInterceptor()).addPathPatterns("/category/**","/product/**","/sale/**","/print/**");
     }
 }
