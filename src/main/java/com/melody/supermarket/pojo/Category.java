@@ -2,8 +2,10 @@ package com.melody.supermarket.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.util.List;
@@ -12,11 +14,13 @@ import java.util.List;
 @Entity
 @Table
 @DynamicUpdate
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties("products")
 public class Category{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull(message = "id不能为空")
     private Long id;
     @Column(name = "name", unique = true)
     private String name;
@@ -28,6 +32,6 @@ public class Category{
     /**
      * 该分类下的商品
      */
-    @OneToMany(mappedBy = "category", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

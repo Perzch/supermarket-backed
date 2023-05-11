@@ -23,10 +23,10 @@ CREATE TABLE IF NOT EXISTS `product` (
                                          name VARCHAR(20) NOT NULL,
                                          yield_date DATE NOT NULL COMMENT "生产日期",
                                          manufacturers VARCHAR(20) NOT NULL COMMENT "产家",
-                                         price DECIMAL NOT NULL,
+                                         price DECIMAL(6,2) NOT NULL,
                                          create_date DATE NOT NULL COMMENT "进货日期",
                                          stock INT NOT NULL CHECK(stock>0),
-                                         now_price DECIMAL NOT NULL COMMENT "售价",
+                                         now_price DECIMAL(6,2) NOT NULL COMMENT "售价",
                                          sale_count INT NOT NULL,
                                          category_name VARCHAR(20) NOT NULL,
                                          FOREIGN KEY(cid) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -95,7 +95,8 @@ INSERT `product`(name,yield_date,manufacturers,price,create_date,stock,now_price
                                                                                                  ("牙刷","2020-07-02","舒克",3.00,"2020-07-13",260,6.00,0,"日用品"),
                                                                                                  ("牙膏","2020-07-02","舒克",8.00,"2020-07-13",500,16.00,0,"日用品"),
                                                                                                  ("绿茶","2020-07-02","统一",1.50,"2020-07-13",3797,3.00,0,"饮品"),
-                                                                                                 ("口红","2020-02-05","迪奥",200.00,"2020-07-13",300,300.00,0,"化妆品");
+                                                                                                 ("口红","2020-02-05","迪奥",200.00,"2020-07-13",300,300.00,0,"化妆品"),
+                                                                                                 ("可口可乐","2020-02-07","可口可乐",2.73,"2020-07-13",3000,3,0,"饮品");
 
 INSERT `sale`(pid,create_date,sale_count) VALUES
                                             (1,"2020-07-14",11),

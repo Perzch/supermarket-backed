@@ -6,6 +6,7 @@ import com.melody.supermarket.repository.CategoryRepository;
 import com.melody.supermarket.services.CategoryServices;
 import com.melody.supermarket.util.BeanUtil;
 import jakarta.annotation.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,10 +30,12 @@ public class CategoryServicesImpl implements CategoryServices {
     public Category update(Category c) {
         Optional<Category> id = categoryRepository.findById(c.getId());
         if(id.isPresent()) {
-            if(Objects.nonNull(categoryRepository.findByName(c.getName()))) {
+            Category byId = id.get();
+            Category byName = categoryRepository.findByName(c.getName());
+//            根据id查到的数据与传入的数据不同名且数据库中已存在同名数据
+            if(!byId.getName().equals(c.getName())&&Objects.nonNull(byName)) {
                 throw new RuntimeException("分类名重复");
             }
-            Category byId = id.get();
             BeanUtil.copyNonNullProperties(c,byId);
             return categoryRepository.save(byId);
         } else {
@@ -48,6 +51,10 @@ public class CategoryServicesImpl implements CategoryServices {
     @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
+    }
+
+    public List<Category> findAll(Sort sort) {
+        return categoryRepository.findAll(sort);
     }
 
     @Override

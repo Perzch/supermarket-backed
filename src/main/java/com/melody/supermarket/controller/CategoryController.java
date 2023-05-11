@@ -8,6 +8,7 @@ import com.melody.supermarket.services.CategoryServices;
 import io.micrometer.common.util.StringUtils;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class CategoryController {
 
     @PutMapping
     public ResponseEntity<ResponseBody<Category>> updateCategory(@RequestBody @Valid Category c) {
+        if(Objects.isNull(c.getId())) return ResponseEntity.ok(new ResponseBody<>(Code.ID_EMPTY));
 //        如果参数有效
         return ResponseEntity.ok(
                 new ResponseBody<>(
@@ -52,7 +54,9 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseBody<?>> queryCategory() {
-        return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryRepository.findAll()));
+    public ResponseEntity<ResponseBody<?>> queryCategory(@RequestParam(required = false) String sortColumn,
+                                                         @RequestParam(required = false) String sort) {
+        if(StringUtils.isBlank(sortColumn)) return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryRepository.findAll()));
+        else return ResponseEntity.ok(new ResponseBody<>(Code.QUERY_SUCCESS,categoryRepository.findAll(Sort.by(Sort.Direction.fromString(sort),sortColumn))));
     }
 }

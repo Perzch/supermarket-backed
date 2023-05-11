@@ -65,7 +65,6 @@ public class ProductServicesImpl implements ProductServices {
         Optional<Product> optional = productRepository.findById(p.getId());
         if(optional.isPresent()) {
             Product product = optional.get();
-            p.setCategoryName(product.getCategoryName());
             BeanUtil.copyNonNullProperties(p,product);
             return productRepository.save(product);
         } else throw new RuntimeException("该商品不存在");

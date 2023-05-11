@@ -68,15 +68,13 @@ public class SaleServicesImpl implements SaleServices {
 
     @Override
     public Sale insert(SaleDto saleDto) {
-        Sale s = new Sale();
-        s.setSaleCount(saleDto.getSaleCount());
+//        传入pid后根据pid查询商品,如果为空则抛出异常,否则获取传入的saleCount和查询到的商品,创建Sale对象并保存
         Optional<Product> optionalProduct = productRepository.findById(saleDto.getPid());
         if(optionalProduct.isPresent()) {
             Product product = optionalProduct.get();
-            s.setProduct(product);
-            s.setCreateDate(DateTime.now());
+            Sale s = Sale.builder().saleCount(saleDto.getSaleCount()).product(product).createDate(DateTime.now()).build();
+            return saleRepository.save(s);
         } else throw new RuntimeException("商品不存在");
-        return saleRepository.save(s);
     }
 
 

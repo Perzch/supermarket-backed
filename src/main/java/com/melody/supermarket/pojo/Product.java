@@ -67,7 +67,7 @@ public class Product{
     @Column(name = "category_name")
     @NotBlank(message = "分类名称不能为空")
     private String categoryName;
-    @ManyToOne(targetEntity = Category.class, cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Category.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "cid")
     private Category category;
     @OneToMany(mappedBy = "product")

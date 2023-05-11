@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.melody</groupId>
     <artifactId>shop</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>shop</name>
-    <description>shop</description>
+    <version>1.0</version>
+    <name>SpringBootSupermarket</name>
+    <description>SpringBootSupermarket</description>
     <properties>
         <java.version>17</java.version>
     </properties>

@@ -1,6 +1,7 @@
 package com.melody.supermarket.services;
 
 import com.melody.supermarket.pojo.Category;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface CategoryServices {
     void delete(Long id);
 
     List<Category> findAll();
+
+    List<Category> findAll(Sort sort);
 
     Category findByName(String name);
 }

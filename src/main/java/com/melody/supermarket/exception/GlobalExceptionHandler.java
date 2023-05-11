@@ -18,16 +18,14 @@ import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity<ResponseBody<?>> exceptionHandler(Exception e) {
-        return ResponseEntity.internalServerError().body(new ResponseBody<>(500, e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(500, e.getMessage(), null));
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {ParameterException.class})
     public ResponseEntity<ResponseBody<?>> exceptionHandler(ParameterException e) {
-        return ResponseEntity.badRequest().body(new ResponseBody<>(e.getCode(), e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(e.getCode(), e.getMessage(), null));
     }
 
     /**
@@ -36,10 +34,9 @@ public class GlobalExceptionHandler {
      * @param e 忽略参数异常
      * @return ResponseEntity
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ResponseBody<?>> parameterMissingExceptionHandler(MissingServletRequestParameterException e) {
-        return ResponseEntity.badRequest().body(new ResponseBody<>(400, e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(400, e.getMessage(), null));
     }
 
     /**
@@ -48,10 +45,9 @@ public class GlobalExceptionHandler {
      * @param e 缺少请求体异常
      * @return ResponseEntity
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ResponseBody<?>> parameterBodyMissingExceptionHandler(HttpMessageNotReadableException e) {
-        return ResponseEntity.badRequest().body(new ResponseBody<>(400, e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(400, e.getMessage(), null));
     }
 
     /**
@@ -71,9 +67,9 @@ public class GlobalExceptionHandler {
             if (!errors.isEmpty()) {
                 List<String> errorsMessage = new ArrayList<>();
                 errors.forEach(err -> errorsMessage.add(err.getDefaultMessage()));
-                return ResponseEntity.badRequest().body(new ResponseBody<>(400, StringUtils.join(errorsMessage,','), null));
+                return ResponseEntity.ok(new ResponseBody<>(400, StringUtils.join(errorsMessage,','), null));
             }
         }
-        return ResponseEntity.badRequest().body(new ResponseBody<>(400, e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(400, e.getMessage(), null));
     }
 }

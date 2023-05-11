@@ -10,9 +10,11 @@ import com.melody.supermarket.util.PageRequestUtil;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 @RestController
@@ -27,11 +29,15 @@ public class ProductController {
                                                        @RequestParam(required = false) Integer limit,
                                                        @RequestParam(required = false) String[] sortColumn,
                                                        @RequestParam(required = false) String sort,
-                                                       @RequestBody(required = false) ProductDto productDto) {
+                                                       @RequestParam(required = false) String name,
+                                                       @RequestParam(required = false) String categoryName,
+                                                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date startYieldDate,
+                                                       @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date endYieldDate) {
         PageRequest pageRequest = PageRequestUtil.getPageRequest(page, limit, sortColumn, sort);
-//        如果传了条件
-        if(Objects.isNull(productDto)) return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(pageRequest)));
-        else return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(productDto, pageRequest)));
+        ProductDto productDto = ProductDto.builder().startYieldDate(startYieldDate).endYieldDate(endYieldDate).build();
+        productDto.setName(name);
+        productDto.setCategoryName(categoryName);
+        return ResponseEntity.ok(new ResponseBody<>(productServices.findAll(productDto, pageRequest)));
     }
 
     @PostMapping
