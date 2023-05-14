@@ -7,6 +7,14 @@ import org.springframework.data.domain.Sort;
 import java.util.Objects;
 
 public class PageRequestUtil {
+    /***
+     * 获取分页请求对象
+     * @param page 页码
+     * @param limit 每页数量
+     * @param sortColumn 排序字段
+     * @param sort 排序方式
+     * @return 分页请求对象
+     */
     public static PageRequest getPageRequest(Integer page, Integer limit, String[] sortColumn, String sort) {
         if(Objects.isNull(page)) page =0;
         if(Objects.isNull(limit)) limit = 10;

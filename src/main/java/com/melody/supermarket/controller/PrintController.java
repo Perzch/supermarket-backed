@@ -23,15 +23,22 @@ import java.util.List;
 public class PrintController {
     @Resource
     SaleServices saleServices;
+
+    /***
+     * 导出销售记录
+     * @param response 响应对象
+     */
     @SneakyThrows
     @GetMapping("/sales")
     public void printSales(HttpServletResponse response) {
         List<Sale> sales = saleServices.findAll();
         ServletOutputStream outputStream = response.getOutputStream();
+//        设置响应头
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition","attachment;filename=sale.xls");
         try(Workbook workbook = new HSSFWorkbook()) {
             Sheet sheet = workbook.createSheet();
+//            设置表格头
             Row rowHeader = sheet.createRow(0);
             rowHeader.createCell(0).setCellValue("销售单号");
             rowHeader.createCell(1).setCellValue("销售日期");
@@ -39,6 +46,7 @@ public class PrintController {
             rowHeader.createCell(3).setCellValue("商品名称");
             rowHeader.createCell(4).setCellValue("商品单价");
             rowHeader.createCell(5).setCellValue("销售总价");
+//            循环设置表格内容
             for (int i = 0; i < sales.size(); i++) {
                 sheet.autoSizeColumn(i);
                 Sale sale = sales.get(i);

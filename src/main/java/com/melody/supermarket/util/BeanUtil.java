@@ -8,7 +8,11 @@ import java.beans.PropertyDescriptor;
 import java.util.Set;
 
 public class BeanUtil {
-
+    /***
+     * 将source中的所有非空属性赋值到target中
+     * @param source 源对象
+     * @param target 目标对象
+     */
     public static void copyNonNullProperties(Object source, Object target) {
         BeanUtils.copyProperties(source, target, getNullPropertyNames(source));
     }
@@ -18,7 +22,7 @@ public class BeanUtil {
         PropertyDescriptor[] pds = src.getPropertyDescriptors();
 
         // 记录属性值为null或空字符串的属性名
-        Set<String> emptyNames = new java.util.HashSet<String>();
+        Set<String> emptyNames = new java.util.HashSet<>();
         for (java.beans.PropertyDescriptor pd : pds) {
             Object srcValue = src.getPropertyValue(pd.getName());
             if (srcValue == null || srcValue.toString().trim().equals("")) {

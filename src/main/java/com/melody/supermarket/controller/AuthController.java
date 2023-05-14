@@ -2,13 +2,11 @@ package com.melody.supermarket.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
-import com.melody.supermarket.exception.ExistException;
 import com.melody.supermarket.exception.ParameterException;
 import com.melody.supermarket.pojo.User;
 import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
 import com.melody.supermarket.services.UserServices;
-import com.melody.supermarket.util.JwtUtil;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -37,12 +35,9 @@ public class AuthController {
         } catch (Exception e) {
             throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
         }
-        User user = userServices.findByUsername(u);
-//        如果没有找到用户，抛出用户不存在异常
-        if(Objects.isNull(user)) throw new ExistException(Code.USER_NOT_EXIST.getMsg());
-        else
-            return user.getPassword().equals(u.getPassword()) ?
-                    ResponseEntity.ok(new ResponseBody<>(JwtUtil.createToken(user.getUsername()))) :
+        String token = userServices.verifyPassword(u);
+        return Objects.nonNull(token) ?
+                    ResponseEntity.ok(new ResponseBody<>(token)) :
                     ResponseEntity.ok(new ResponseBody<>(Code.PASSWORD_ERROR));
     }
 

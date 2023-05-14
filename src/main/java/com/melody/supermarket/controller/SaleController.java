@@ -20,6 +20,19 @@ public class SaleController {
     @Resource
     private SaleServices saleServices;
 
+    /***
+     * 查询所有销售记录
+     * @param page 页码
+     * @param limit 每页数量
+     * @param sortColumn 排序字段
+     * @param sort 排序方式
+     * @param pid 商品id
+     * @param saleCount 销售数量
+     * @param categoryName 分类名称
+     * @param startCreateDate 开始创建日期
+     * @param endCreateDate 结束创建日期
+     * @return 销售记录列表
+     */
     @GetMapping
     public ResponseEntity<ResponseBody<?>> findSale(@RequestParam(required = false) Integer page,
                                                     @RequestParam(required = false) Integer limit,
@@ -38,6 +51,11 @@ public class SaleController {
             return ResponseEntity.ok(new ResponseBody<>(saleServices.findAll(saleDto, pageRequest)));
     }
 
+    /***
+     * 添加销售记录
+     * @param sale 销售记录
+     * @return 添加的销售记录
+     */
     @PostMapping
     public ResponseEntity<ResponseBody<?>> insertSale(@RequestBody SaleDto sale) {
         return ResponseEntity.ok(new ResponseBody<>(Code.INSERTED,saleServices.insert(sale)));

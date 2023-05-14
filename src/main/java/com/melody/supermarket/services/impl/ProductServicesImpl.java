@@ -33,6 +33,7 @@ public class ProductServicesImpl implements ProductServices {
     @Override
     public Page<Product> findAll(ProductDto productDto, Pageable pageable) {
         List<Specification<Product>> specifications = new ArrayList<>();
+//        根据传过来的条件添加Specification
         if(StringUtils.isNotBlank(productDto.getName())) {
             specifications.add(ProductSpecification.nameLike(productDto.getName()));
         }
