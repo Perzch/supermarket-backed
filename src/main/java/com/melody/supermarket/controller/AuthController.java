@@ -31,7 +31,9 @@ public class AuthController {
     public ResponseEntity<ResponseBody<String>> login(@RequestBody @Valid User u) {
         try{
 //            验证码错误，抛出验证码错误异常
-            lineCaptcha.verify(u.getCaptcha());
+            if(lineCaptcha.verify(u.getCaptcha())) {
+                throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
+            }
         } catch (Exception e) {
             throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
         }
