@@ -15,10 +15,10 @@ public interface SaleSpecification {
     }
 
     static Specification<Sale> createDateBefore(Date end) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("createDate"), end);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("createDate"), end);
     }
 
     static Specification<Sale> createDateAfter(Date start) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get("createDate"), start);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("createDate"), start);
     }
 }

@@ -21,10 +21,10 @@ public interface ProductSpecification {
     }
 
     static Specification<Product> yieldDateBefore(Date end) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("yieldDate"), end);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("yieldDate"), end);
     }
 
     static Specification<Product> yieldDateAfter(Date start) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get("yieldDate"), start);
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("yieldDate"), start);
     }
 }
