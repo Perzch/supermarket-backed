@@ -34,13 +34,21 @@ public class ProductServicesImpl implements ProductServices {
     public Page<Product> findAll(ProductDto productDto, Pageable pageable) {
         List<Specification<Product>> specifications = new ArrayList<>();
 //        根据传过来的条件添加Specification
-        if(StringUtils.isNotBlank(productDto.getName())) {
+//        如果查询条件带有name
+        if(StringUtils.isNotBlank(productDto.getName()))
             specifications.add(ProductSpecification.nameLike(productDto.getName()));
-        }
+//        如果查询条件带有categoryName
         if(StringUtils.isNotBlank(productDto.getCategoryName()))
             specifications.add(ProductSpecification.categoryNameLike(productDto.getCategoryName()));
+//        如果查询条件带有startYieldDate和endYieldDate
         if(Objects.nonNull(productDto.getStartYieldDate())&&Objects.nonNull(productDto.getEndYieldDate())) {
             specifications.add(ProductSpecification.yieldDateBetween(productDto.getStartYieldDate(), productDto.getEndYieldDate()));
+//        如果查询条件只带有startYieldDate
+        }else if(Objects.nonNull(productDto.getStartYieldDate())) {
+            specifications.add(ProductSpecification.yieldDateAfter(productDto.getStartYieldDate()));
+//        如果查询条件只带有endYieldDate
+        } else if(Objects.nonNull(productDto.getEndYieldDate())) {
+            specifications.add(ProductSpecification.yieldDateBefore(productDto.getEndYieldDate()));
         }
 //        将list里面的Specification条件组合
         Specification<Product> specification = specifications.stream().reduce(Specification::and).orElse(null);

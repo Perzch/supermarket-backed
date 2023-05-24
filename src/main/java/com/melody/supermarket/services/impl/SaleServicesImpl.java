@@ -45,7 +45,7 @@ public class SaleServicesImpl implements SaleServices {
         if(Objects.nonNull(saleDto.getStartCreateDate())&&Objects.nonNull(saleDto.getEndCreateDate())) {
             specifications.add(SaleSpecification.createDateBetween(saleDto.getStartCreateDate(),saleDto.getEndCreateDate()));
 //            如果查询条件只带有endCreateDate
-        } else if(Objects.isNull(saleDto.getStartCreateDate())&&Objects.nonNull(saleDto.getEndCreateDate())) {
+        } else if(Objects.nonNull(saleDto.getEndCreateDate())) {
             specifications.add(SaleSpecification.createDateBefore(saleDto.getEndCreateDate()));
 //            如果查询条件只带有startCreateDate
         } else if(Objects.nonNull(saleDto.getStartCreateDate())) {

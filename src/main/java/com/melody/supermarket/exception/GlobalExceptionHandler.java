@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {ParameterException.class})
     public ResponseEntity<ResponseBody<?>> exceptionHandler(ParameterException e) {
-        return ResponseEntity.ok(new ResponseBody<>(e.getCode(), e.getMessage(), null));
+        return ResponseEntity.ok(new ResponseBody<>(400, e.getMessage(), null));
     }
 
     /**

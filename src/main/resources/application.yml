@@ -11,7 +11,7 @@ spring:
         format_sql: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.18.0.4:3306/supermarket?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://172.18.0.2:3306/supermarket?useSSL=false&serverTimezone=UTC
     username: root
     password: perzch
   jackson:

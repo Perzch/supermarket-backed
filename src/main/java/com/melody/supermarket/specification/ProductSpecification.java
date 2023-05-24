@@ -19,4 +19,12 @@ public interface ProductSpecification {
     static Specification<Product> yieldDateBetween(Date start, Date end) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get("yieldDate"), start, end);
     }
+
+    static Specification<Product> yieldDateBefore(Date end) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThan(root.get("yieldDate"), end);
+    }
+
+    static Specification<Product> yieldDateAfter(Date start) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.greaterThan(root.get("yieldDate"), start);
+    }
 }
