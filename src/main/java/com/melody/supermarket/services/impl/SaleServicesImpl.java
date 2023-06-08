@@ -88,15 +88,23 @@ public class SaleServicesImpl implements SaleServices {
 
     @Override
     public Sale insert(SaleProductInsertDto saleProductInsertDto) {
-//        传入pid后根据pid查询商品,如果为空则抛出异常,否则获取传入的saleCount和查询到的商品,创建Sale对象并保存
-        //将saleProductInsertDto的ids里的所有id查询出来
-        List<Product> all = productRepository.findAllById(saleProductInsertDto.getIds().stream().map(SaleProductDto::getId).toList());
-        if(all.size() > 0) {
-            List<SaleProduct> saleProducts = new ArrayList<>();
-            saleProductInsertDto.getIds().forEach(saleProductDto -> saleProducts.add(SaleProduct.builder().count(saleProductDto.getCount()).build()));
-            Sale sale = Sale.builder().products(all).createDate(DateTime.now()).saleProducts(saleProducts).build();
-            return saleRepository.save(sale);
-        } else throw new RuntimeException("商品不存在");
+        Sale sale = Sale.builder().createDate(DateTime.now()).build();
+        List<SaleProduct> saleProducts = new ArrayList<>();
+        for(SaleProductDto saleProductDto:saleProductInsertDto.getIds()) {
+            Optional<Product> optional = productRepository.findById(saleProductDto.getId());
+            if(optional.isPresent()) {
+                Product product = optional.get();
+                if(product.getStock()<saleProductDto.getCount()) {
+                    throw new RuntimeException("库存不足");
+                }
+                product.setStock(product.getStock()-saleProductDto.getCount());
+                productRepository.save(product);
+                SaleProduct saleProduct = SaleProduct.builder().count(saleProductDto.getCount()).product(product).sale(sale).build();
+                saleProducts.add(saleProduct);
+            } else throw new RuntimeException("商品不存在");
+        }
+        sale.setSaleProducts(saleProducts);
+        return saleRepository.save(sale);
     }
 
 

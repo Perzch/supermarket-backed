@@ -1,46 +1,3 @@
-# create database & table
-DROP DATABASE IF EXISTS supermarket;
-CREATE DATABASE IF NOT EXISTS supermarket;
-USE supermarket;
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE IF NOT EXISTS `user` (
-                                      id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                                      username VARCHAR(20) NOT NULL,
-                                      password VARCHAR(50) NOT NULL
-);
-
-DROP TABLE IF EXISTS `category`;
-CREATE TABLE IF NOT EXISTS `category` (
-                                          id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                                          name VARCHAR(20) UNIQUE,
-                                          recommend VARCHAR(20) NOT NULL COMMENT "推荐指数"
-);
-
-DROP TABLE IF EXISTS `product`;
-CREATE TABLE IF NOT EXISTS `product` (
-                                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                                         cid BIGINT,
-                                         name VARCHAR(20) NOT NULL,
-                                         yield_date DATE NOT NULL COMMENT "生产日期",
-                                         manufacturers VARCHAR(20) NOT NULL COMMENT "产家",
-                                         price DECIMAL(6,2) NOT NULL,
-                                         create_date DATE NOT NULL COMMENT "进货日期",
-                                         stock INT NOT NULL CHECK(stock>0),
-                                         now_price DECIMAL(6,2) NOT NULL COMMENT "售价",
-                                         sale_count INT NOT NULL,
-                                         category_name VARCHAR(20) NOT NULL,
-                                         FOREIGN KEY(cid) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-DROP TABLE IF EXISTS `sale`;
-CREATE TABLE IF NOT EXISTS `sale` (
-                                      id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                                      pid BIGINT,
-                                      create_date DATE NOT NULL,
-                                      sale_count INT NOT NULL,
-                                      FOREIGN KEY(pid) REFERENCES product(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
 # create trigger
 DELIMITER $
 -- product表更新数据前,category_name禁止更新(会导致修改cid时category_name不同步)
@@ -60,13 +17,15 @@ BEGIN
     set new.cid = cID;
 END$
 -- sale表插入数据后,product的库存相应减少
-DROP TRIGGER IF EXISTS insert_after_sale$
-CREATE TRIGGER insert_after_sale AFTER INSERT
-    ON sale FOR EACH ROW
-BEGIN
-    UPDATE product set stock = stock - new.sale_count WHERE id = new.pid;
-    UPDATE product set sale_count = sale_count + new.sale_count WHERE id = new.pid;
-END$
+# DROP TRIGGER IF EXISTS insert_after_sale_product$
+# CREATE TRIGGER insert_after_sale_product AFTER INSERT
+#     ON sale_product FOR EACH ROW
+# BEGIN
+#     IF new.count > 0 THEN
+#     UPDATE product set stock = stock - new.count WHERE id = new.product_id;
+#     UPDATE product set sale_count = sale_count + new.count WHERE id = new.product_id;
+#     END IF;
+# END$
 -- category表更改后,product的分类名称也修改
 DELIMITER $
 DROP TRIGGER IF EXISTS update_after_category$
@@ -80,9 +39,9 @@ END$
 
 USE supermarket;
 INSERT `user` VALUES
-                  (null,"admin","123456"),
-                  (null,"perzch","perzch"),
-                  (null,"test","123456");
+                  (1,"admin","123456"),
+                  (2,"perzch","perzch"),
+                  (3,"test","123456");
 
 INSERT `category` VALUES
                       (null,"食品","97"),
@@ -97,9 +56,3 @@ INSERT `product`(name,yield_date,manufacturers,price,create_date,stock,now_price
                                                                                                  ("绿茶","2020-07-02","统一",1.50,"2020-07-13",3797,3.00,0,"饮品"),
                                                                                                  ("口红","2020-02-05","迪奥",200.00,"2020-07-13",300,300.00,0,"化妆品"),
                                                                                                  ("可口可乐","2020-02-07","可口可乐",2.73,"2020-07-13",3000,3,0,"饮品");
-
-INSERT `sale`(pid,create_date,sale_count) VALUES
-                                            (1,"2020-07-14",11),
-                                            (2,"2020-07-14",40),
-                                            (3,"2020-07-14",410),
-                                            (4,"2020-07-14",203)

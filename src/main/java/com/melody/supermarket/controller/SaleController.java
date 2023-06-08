@@ -59,6 +59,6 @@ public class SaleController {
      */
     @PostMapping
     public ResponseEntity<ResponseBody<?>> insertSale(@RequestBody SaleProductInsertDto saleProductInsertDto) {
-        return ResponseEntity.ok(new ResponseBody<>(Code.INSERTED));
+        return ResponseEntity.ok(new ResponseBody<>(Code.INSERTED, saleServices.insert(saleProductInsertDto)));
     }
 }
