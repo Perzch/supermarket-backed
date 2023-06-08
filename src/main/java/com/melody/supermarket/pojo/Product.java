@@ -70,7 +70,7 @@ public class Product{
     @ManyToOne(targetEntity = Category.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "cid")
     private Category category;
-    @OneToMany(mappedBy = "product")
+    @ManyToMany(mappedBy = "products",cascade = CascadeType.ALL)
     private List<Sale> sales;
 }
 

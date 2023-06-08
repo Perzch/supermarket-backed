@@ -12,9 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.Objects;
 
 @RestController
@@ -24,17 +26,12 @@ public class AuthController {
     @Autowired
     private UserServices userServices;
 
-//    验证码对象
-    private LineCaptcha lineCaptcha;
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @PostMapping
     public ResponseEntity<ResponseBody<String>> login(@RequestBody @Valid User u) {
-        try{
-//            验证码错误，抛出验证码错误异常
-            if(!lineCaptcha.verify(u.getCaptcha())) {
-                throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
-            }
-        } catch (Exception e) {
+        if(!Objects.equals(redisTemplate.opsForValue().get(u.getUuid()), u.getCaptcha())) {
             throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
         }
         String token = userServices.verifyPassword(u);
@@ -46,8 +43,10 @@ public class AuthController {
     @SneakyThrows
     @GetMapping("/captcha")
 //    生成验证码图像
-    public void captcha(HttpServletResponse response) {
-        lineCaptcha = CaptchaUtil.createLineCaptcha(200,100);
+    public void captcha(HttpServletResponse response,@RequestParam String uuid) {
+//    验证码对象
+        LineCaptcha lineCaptcha =CaptchaUtil.createLineCaptcha(200,100);
+        redisTemplate.opsForValue().set(uuid,lineCaptcha.getCode(), Duration.ofMinutes(3));
         response.setContentType("image/jpg");
         response.setHeader("Pragma","no-cache");
         try(ServletOutputStream outputStream = response.getOutputStream()) {

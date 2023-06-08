@@ -1,6 +1,7 @@
 package com.melody.supermarket.services;
 
 import com.melody.supermarket.dto.SaleDto;
+import com.melody.supermarket.dto.SaleProductInsertDto;
 import com.melody.supermarket.pojo.Sale;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +17,7 @@ public interface SaleServices {
 
     Sale findById(Long id);
 
-    Sale insert(SaleDto s);
+    Sale insert(SaleProductInsertDto saleProductInsertDto);
 
     void delete(Long id);
 }

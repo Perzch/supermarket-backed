@@ -25,5 +25,7 @@ public class User{
     @Transient
     @NotBlank(message = "验证码不能为空")
     private String captcha;
-
+    @Transient
+    @NotBlank(message = "唯一标识不能为空")
+    private String uuid;
 }

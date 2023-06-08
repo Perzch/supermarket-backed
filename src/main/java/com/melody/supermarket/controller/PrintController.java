@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -43,9 +42,7 @@ public class PrintController {
             rowHeader.createCell(0).setCellValue("销售单号");
             rowHeader.createCell(1).setCellValue("销售日期");
             rowHeader.createCell(2).setCellValue("销售数量");
-            rowHeader.createCell(3).setCellValue("商品名称");
-            rowHeader.createCell(4).setCellValue("商品单价");
-            rowHeader.createCell(5).setCellValue("销售总价");
+            rowHeader.createCell(3).setCellValue("销售总价");
 //            循环设置表格内容
             for (int i = 0; i < sales.size(); i++) {
                 sheet.autoSizeColumn(i);
@@ -53,10 +50,8 @@ public class PrintController {
                 Row row = sheet.createRow(i + 1);
                 row.createCell(0).setCellValue(sale.getId());
                 row.createCell(1).setCellValue(new SimpleDateFormat("yyyy-MM-dd").format(sale.getCreateDate()));
-                row.createCell(2).setCellValue(sale.getSaleCount());
-                row.createCell(3).setCellValue(sale.getProduct().getName());
-                row.createCell(4).setCellValue(sale.getProduct().getNowPrice().toString());
-                row.createCell(5).setCellValue((new BigDecimal(sale.getSaleCount().toString()).multiply(sale.getProduct().getNowPrice())).toString());
+//                row.createCell(2).setCellValue(sale.getSaleCount());
+//                row.createCell(3).setCellValue(sale.getProducts().stream().reduce(BigDecimal.ZERO, (a, b) -> a.add(b.getPrice()), BigDecimal::add).multiply(new BigDecimal(sale.getSaleCount())).doubleValue());
             }
             workbook.write(outputStream);
             outputStream.close();

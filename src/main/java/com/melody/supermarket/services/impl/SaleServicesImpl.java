@@ -2,9 +2,13 @@ package com.melody.supermarket.services.impl;
 
 import cn.hutool.core.date.DateTime;
 import com.melody.supermarket.dto.SaleDto;
+import com.melody.supermarket.dto.SaleProductDto;
+import com.melody.supermarket.dto.SaleProductInsertDto;
 import com.melody.supermarket.pojo.Product;
 import com.melody.supermarket.pojo.Sale;
+import com.melody.supermarket.pojo.SaleProduct;
 import com.melody.supermarket.repository.ProductRepository;
+import com.melody.supermarket.repository.SaleProductRepository;
 import com.melody.supermarket.repository.SaleRepository;
 import com.melody.supermarket.services.SaleServices;
 import com.melody.supermarket.specification.SaleSpecification;
@@ -27,6 +31,9 @@ public class SaleServicesImpl implements SaleServices {
 
     @Resource
     private ProductRepository productRepository;
+
+    @Resource
+    private SaleProductRepository saleProductRepository;
 
     /***
      * 根据条件查询销售记录后分页并排序
@@ -80,13 +87,15 @@ public class SaleServicesImpl implements SaleServices {
     }
 
     @Override
-    public Sale insert(SaleDto saleDto) {
+    public Sale insert(SaleProductInsertDto saleProductInsertDto) {
 //        传入pid后根据pid查询商品,如果为空则抛出异常,否则获取传入的saleCount和查询到的商品,创建Sale对象并保存
-        Optional<Product> optionalProduct = productRepository.findById(saleDto.getPid());
-        if(optionalProduct.isPresent()) {
-            Product product = optionalProduct.get();
-            Sale s = Sale.builder().saleCount(saleDto.getSaleCount()).product(product).createDate(DateTime.now()).build();
-            return saleRepository.save(s);
+        //将saleProductInsertDto的ids里的所有id查询出来
+        List<Product> all = productRepository.findAllById(saleProductInsertDto.getIds().stream().map(SaleProductDto::getId).toList());
+        if(all.size() > 0) {
+            List<SaleProduct> saleProducts = new ArrayList<>();
+            saleProductInsertDto.getIds().forEach(saleProductDto -> saleProducts.add(SaleProduct.builder().count(saleProductDto.getCount()).build()));
+            Sale sale = Sale.builder().products(all).createDate(DateTime.now()).saleProducts(saleProducts).build();
+            return saleRepository.save(sale);
         } else throw new RuntimeException("商品不存在");
     }
 

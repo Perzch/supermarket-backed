@@ -1,6 +1,7 @@
 package com.melody.supermarket.controller;
 
 import com.melody.supermarket.dto.SaleDto;
+import com.melody.supermarket.dto.SaleProductInsertDto;
 import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
 import com.melody.supermarket.services.SaleServices;
@@ -53,11 +54,11 @@ public class SaleController {
 
     /***
      * 添加销售记录
-     * @param sale 销售记录
+     * @param saleProductInsertDto 销售记录
      * @return 添加的销售记录
      */
     @PostMapping
-    public ResponseEntity<ResponseBody<?>> insertSale(@RequestBody SaleDto sale) {
-        return ResponseEntity.ok(new ResponseBody<>(Code.INSERTED,saleServices.insert(sale)));
+    public ResponseEntity<ResponseBody<?>> insertSale(@RequestBody SaleProductInsertDto saleProductInsertDto) {
+        return ResponseEntity.ok(new ResponseBody<>(Code.INSERTED));
     }
 }
