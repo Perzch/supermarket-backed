@@ -17,15 +17,15 @@ BEGIN
     set new.cid = cID;
 END$
 -- sale表插入数据后,product的库存相应减少
-# DROP TRIGGER IF EXISTS insert_after_sale_product$
-# CREATE TRIGGER insert_after_sale_product AFTER INSERT
-#     ON sale_product FOR EACH ROW
-# BEGIN
-#     IF new.count > 0 THEN
-#     UPDATE product set stock = stock - new.count WHERE id = new.product_id;
-#     UPDATE product set sale_count = sale_count + new.count WHERE id = new.product_id;
-#     END IF;
-# END$
+DROP TRIGGER IF EXISTS insert_after_sale_product$
+CREATE TRIGGER insert_after_sale_product AFTER INSERT
+    ON sale_product FOR EACH ROW
+BEGIN
+    IF new.count > 0 THEN
+    UPDATE product set stock = stock - new.count WHERE id = new.product_id;
+    UPDATE product set sale_count = sale_count + new.count WHERE id = new.product_id;
+    END IF;
+END$
 -- category表更改后,product的分类名称也修改
 DELIMITER $
 DROP TRIGGER IF EXISTS update_after_category$
