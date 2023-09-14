@@ -2,18 +2,14 @@
 
 ```yaml
 spring:
-	datasource:
-		#将your_ip/host改成数据库的ip和端口,your_database为你的数据库
-		url: jdbc:mysql://your_ip:host/your_database?useSSL=false&serverTimezone=UTC
+ datasource:
+  #将your_ip/host改成数据库的ip和端口,your_database为你的数据库
+  url: jdbc:mysql://your_ip:host/your_database?useSSL=false&serverTimezone=UTC
 ```
 
 # Database
 
-运行src/main/resource/console.sql创建数据库并且插入数据
-
-
-
-
+第一次运行项目会自动创建表，之后运行resource文件夹下的console.sql文件夹
 
 # Getting Started
 
