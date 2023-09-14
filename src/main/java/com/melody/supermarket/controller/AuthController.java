@@ -2,7 +2,6 @@ package com.melody.supermarket.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
-import com.melody.supermarket.exception.ParameterException;
 import com.melody.supermarket.pojo.User;
 import com.melody.supermarket.request.Code;
 import com.melody.supermarket.request.ResponseBody;
@@ -31,9 +30,9 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<ResponseBody<String>> login(@RequestBody @Valid User u) {
-        if(!Objects.equals(redisTemplate.opsForValue().get(u.getUuid()), u.getCaptcha())) {
-            throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
-        }
+//        if(!Objects.equals(redisTemplate.opsForValue().get(u.getUuid()), u.getCaptcha())) {
+//            throw new ParameterException(Code.CAPTCHA_ERROR.getMsg());
+//        }
         String token = userServices.verifyPassword(u);
         return Objects.nonNull(token) ?
                     ResponseEntity.ok(new ResponseBody<>(token)) :

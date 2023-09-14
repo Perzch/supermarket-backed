@@ -2,6 +2,7 @@ package com.melody.supermarket.util;
 
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
+import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,12 @@ public class JwtUtil {
     }
 
     public static boolean verifyToken(String token) {
-        return JWTUtil.verify(token, key.getBytes());
+        if(!JWTUtil.verify(token, key.getBytes())){
+            return false;
+        }
+
+        JWT jwt = JWTUtil.parseToken(token);
+
+        return System.currentTimeMillis() / 1000 < Long.parseLong(jwt.getPayload("exp").toString());
     }
 }

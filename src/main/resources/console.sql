@@ -1,4 +1,5 @@
 # create trigger
+USE supermarket;
 DELIMITER $
 -- product表更新数据前,category_name禁止更新(会导致修改cid时category_name不同步)
 # DROP TRIGGER IF EXISTS update_before_product$
@@ -37,7 +38,6 @@ BEGIN
     END IF;
 END$
 
-USE supermarket;
 INSERT `user` VALUES
                   (1,"admin","123456"),
                   (2,"perzch","perzch"),
