@@ -1,36 +1,52 @@
-# Application.yml
+# java -jar
 
-```yaml
-spring:
- datasource:
-  #将your_ip/host改成数据库的ip和端口,your_database为你的数据库
-  url: jdbc:mysql://your_ip:host/your_database?useSSL=false&serverTimezone=UTC
+```cmd
+java -jar target/xxx.jar --spring.datasource.url=jdbc:mysql://localhost:3306/xxx?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC --spring.data.redis.host=your-redis-host
 ```
 
-# Database
+# docker-compose.yml
+```docker-compose
+version: '3'
+services:
+  # 后端 Spring Boot 应用
+  backend:
+    image: supermarket-backend:latest
+    ports:
+      - "8080:8080"  # 映射 Spring Boot 服务的端口
+    depends_on:
+      - redis  # 指定依赖 Redis 服务
+      - mysql
+    # environment:
+    #   - spring.datasource.url=jdbc:mysql://mysql:3306/supermarket?serverTimezone=UTC
+    #   - spring.datasource.password=perzch
+    #   - spring.redis.host=redis
 
-第一次运行项目会自动创建表，之后运行resource文件夹下的console.sql文件夹
+  # Redis 服务
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"  # 映射 Redis 的端口
 
-# Getting Started
+  # Vue 前端应用
+  frontend:
+    image: supermarket-front:latest
+    ports:
+      - "80:80"  # 映射 Vue 前端应用的端口
+    depends_on:
+      - backend  # 指定依赖后端 Spring Boot 应用
 
-### Reference Documentation
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: perzch
+#      MYSQL_DATABASE: supermarket
+#      MYSQL_USER: supermarket
+#      MYSQL_PASSWORD: perzch
+networks:
+    default:
+        external:
+            name: supermarket-network
 
-For further reference, please consider the following sections:
-
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.0.6/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.0.6/maven-plugin/reference/html/#build-image)
-* [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/3.0.6/reference/htmlsingle/#using.devtools)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.0.6/reference/htmlsingle/#web)
-* [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/3.0.6/reference/htmlsingle/#appendix.configuration-metadata.annotation-processor)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.0.6/reference/htmlsingle/#data.sql.jpa-and-spring-data)
-
-### Guides
-
-The following guides illustrate how to use some features concretely:
-
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
+```
